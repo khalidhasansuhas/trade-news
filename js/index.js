@@ -34,6 +34,9 @@ const displayNewsByCategoryId = data =>{
     itemFound.innerHTML=`
     <h1 class="pl-5 py-2">${data.length} News items found for this category </h1>
     `
+    data.sort((a,b)=>{
+        return b.total_view - a.total_view;
+    })
 
     const allCategoryNewsDetails = document.getElementById('news-container');
     allCategoryNewsDetails.textContent=``;
