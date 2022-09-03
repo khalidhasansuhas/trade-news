@@ -2,6 +2,7 @@ const loadCategory = ()=>{
     fetch('https://openapi.programming-hero.com/api/news/categories')
     .then(res => res.json())
     .then(data => setAllCategories(data.data.news_category))
+    .catch(error => console.log(error))
 }
 
 const setAllCategories = categories =>{
@@ -13,7 +14,7 @@ const setAllCategories = categories =>{
         const li = document.createElement('li');
         li.innerHTML=`
         <a onclick="loadNewsByCategoryId('${category.category_id}')"
-        class="block py-2 pr-4 pl-3 font-bold text-gray-700 rounded hover:bg-gray-100 hover:cursor-auto md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0">${category.category_name}</a>
+        class="block py-2 pr-4 pl-3 font-bold text-gray-700 rounded cursor-pointer md:border-0 md:hover:text-blue-700 md:p-0">${category.category_name}</a>
         `;
         allCategory.appendChild(li);
     }
@@ -24,7 +25,7 @@ const setAllCategories = categories =>{
     fetch(url)
     .then(res => res.json())
     .then (data => displayNewsByCategoryId(data.data))
-    
+    .catch(error => console.log(error))
  }
     
 
@@ -34,6 +35,7 @@ const displayNewsByCategoryId = data =>{
     itemFound.innerHTML=`
     <h1 class="pl-5 py-2">${data.length} News items found for this category </h1>
     `
+    //data sorted by view count
     data.sort((a,b)=>{
         return b.total_view - a.total_view;
     })
@@ -51,8 +53,9 @@ const displayNewsByCategoryId = data =>{
 
     data.forEach(news => {
         // console.log(news);
-        const {image_url,title,total_view,_id,details,author} = news;
+        const {image_url,title,total_view,_id,details,author,rating} = news;
         const {img,name,published_date} = author;
+        const {number}= rating;
         const newsDiv = document.createElement('div')
         newsDiv.innerHTML=`
         <div
@@ -77,12 +80,8 @@ const displayNewsByCategoryId = data =>{
                             <span class="font-semibold">View: ${total_view ? total_view : 'N/A' }</span>
                             </div>
                             <div class="flex items-center mt-2.5 mb-5">
-                            <svg aria-hidden="true" class="w-5 h-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>First star</title><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                            <svg aria-hidden="true" class="w-5 h-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Second star</title><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                            <svg aria-hidden="true" class="w-5 h-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Third star</title><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                            <svg aria-hidden="true" class="w-5 h-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Fourth star</title><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                            <svg aria-hidden="true" class="w-5 h-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Fifth star</title><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                            <span class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ml-3">5.0</span>
+                           
+                            <span class="bg-blue-100 items-center text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded  ml-3">Rating: ${number}</span>
                         </div>
                             <div>
                             <label for="my-modal-3" onclick="getModalByNewsId('${_id}')" class="btn btn-primary modal-button">View Details</label>
@@ -104,6 +103,7 @@ const url = `https://openapi.programming-hero.com/api/news/${id}`;
 fetch(url)
 .then(res => res.json())
 .then(data => showModal(data.data[0]))
+.catch(error => console.log(error))
 }
 
 const showModal = data =>{
