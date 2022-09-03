@@ -19,16 +19,33 @@ const setAllCategories = categories =>{
     }
 }
  const loadNewsByCategoryId = (id) =>{
+    toggleSpinner(true); //spinner start
     const url = `https://openapi.programming-hero.com/api/news/category/${id}`
     fetch(url)
     .then(res => res.json())
     .then (data => displayNewsByCategoryId(data.data))
+    
  }
+    
 
 const displayNewsByCategoryId = data =>{
     // console.log(data);
+    const itemFound = document.getElementById('items-found');
+    itemFound.innerHTML=`
+    <h1 class="pl-5 py-2">${data.length} News items found for this category </h1>
+    `
+
     const allCategoryNewsDetails = document.getElementById('news-container');
     allCategoryNewsDetails.textContent=``;
+    
+
+    const noNews = document.getElementById('no-news-found');
+    if (data.length === 0) {
+        noNews.classList.remove('hidden'); 
+    } else{
+        noNews.classList.add('hidden')
+    }
+
     data.forEach(news => {
         // console.log(news);
         const {image_url,title,total_view,_id,details,author} = news;
@@ -54,7 +71,7 @@ const displayNewsByCategoryId = data =>{
                                 </div>
                             </div>
                             <div class="flex items-center >
-                            <span class="font-semibold">View: ${total_view}</span>
+                            <span class="font-semibold">View: ${total_view ? total_view : 'N/A' }</span>
                             </div>
                             <div class="flex items-center mt-2.5 mb-5">
                             <svg aria-hidden="true" class="w-5 h-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>First star</title><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
@@ -74,6 +91,7 @@ const displayNewsByCategoryId = data =>{
         `;
         allCategoryNewsDetails.appendChild(newsDiv);
     });
+    toggleSpinner(false);//spinner stops
 }
 
 const getModalByNewsId = (id) =>{
@@ -89,16 +107,27 @@ const showModal = data =>{
 // data.forEach(id = )
 const {title,image_url,author,details} = data;
 const {name,published_date} = author;
+
 console.log(data.category_id)
 const modalBody = document.getElementById('modal-body');
 modalBody.innerHTML=`
 <img src="${image_url}">
 <h3 class="text-lg font-bold">${title}</h3>
-<h3><span class="text-lg text-blue-500 font-bold">Author:</span> ${name ? name : 'Not Found' } </h3>
+<h3><span class="text-lg text-blue-500 font-bold">Author:</span> ${name ? name : 'N/A' } </h3>
 <small><span class="font-bold text-blue-500">Date:</span> ${published_date ? published_date: 'N/A'}</small>
 <p class="py-4">${details}</p>
 `
 
+}
+
+// spinner
+const toggleSpinner = isLoading =>{
+    const spinnerSection = document.getElementById('spinner')
+    if(isLoading){
+        spinnerSection.classList.remove('hidden')
+    }else{
+        spinnerSection.classList.add('hidden')
+    }
 }
 
 loadCategory();
